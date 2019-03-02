@@ -11,46 +11,28 @@
 <body>
 <script src="three.js"></script>
 <script>
-  // 새로운 Scene (그림 그리는 혹은 애니메이션 만드는 화면) 만들기
   var scene = new THREE.Scene();
-
-  // 3차원 카메라 설치 - 아직 최종은 아니고 설치 준비 단계로 생각하면 좋다.
-  // 카메라의 화각은 75도
-  // ratio (레이시오:화면비율)는 화면세로/화면가로
-  // 어디까지 보여줄 지 : 가깝기는 0.1까지, 멀리는 1000까지.
-  var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 4000 );
-
-  // 아까 만든 카메라의 z 위치를 5로 높여준다.
-  camera.position.z = 5;
-  // 실제 그림 그리기 기능을 가진 클래스인 WebGL 렌더러의 객체 만들기
+  var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
   var renderer = new THREE.WebGLRenderer();
-  // 렌더러의 크기는 (윈도우창 가로, 윈도우창 세로) 사이즈
   renderer.setSize( window.innerWidth, window.innerHeight );
-  // 렌더러를 화면에 붙이기
   document.body.appendChild( renderer.domElement );
-  // 지오메트리 객체 중 박스 지오메트리를 만들기
-  // 크기는 1 * 1 * 1
-  var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-  // 기본 매터리얼을 하나 만들되 색은 녹색으로,
-  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-  // cube라는 이름의 변수는 위에서 만든 박스 지오메트리와 매터리얼로 만들어낸 메쉬
-  var cube = new THREE.Mesh( geometry, material );
-  // 화면에 cube 객체를 붙여준다
-  scene.add( cube );
-  // 애니메이트라는 함수를 하나 만든다
-  function animate () {
-    // 애니메이션 프레임을 요청 : 이건 화면 refresh를 위한 ThreeJS의 내장 함수
-    // 여기서 흥미로운 점은 리프래시 하면서 호출하는 함수인데,
-    // animate함수 안에서 animate 자기 자신을 호출하고 있다.
+  camera.position.z = 10;
+  var material1 = new THREE.LineBasicMaterial( { color: 0xe0e0e0  } );
+  var geometry1 = new THREE.Geometry();
+  for (var i=0; i<1500; i++) {
+    var xPos = Math.random()*20-10;
+    var yPos = Math.random()*20-10;
+    var zPos = Math.random()*20-10;
+    geometry1.vertices.push(new THREE.Vector3(xPos, yPos, zPos) );
+  }
+  var line = new THREE.Line( geometry1, material1 );
+  scene.add( line );
+  var animate = function () {
     requestAnimationFrame( animate );
-    // 큐브를 X좌표 기준으로 0.1씩 회전한다
-    cube.rotation.x += 0.1;
-    // 큐브를 Y좌표 기준으로 0.1씩 회전한다
-    cube.rotation.y += 0.1;
-    // 렌더러에게 scene(화면)을 camera를 들고 렌더링 하라고 시킨다.
+    line.rotation.x -= 0.003;
+    line.rotation.y -= 0.004;
     renderer.render(scene, camera);
   };
-  // animate함수를 호출. 호출만 하면 새로운 프레임을 불러와 자기자신을 재호출하는 구조라서 한번만 호출
   animate();
 
 </script>
